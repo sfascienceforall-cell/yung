@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fentes de Young · SFA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@500&display=swap">
 </head>
 <body>
 <style>
@@ -17,45 +17,84 @@ canvas{display:block;border-radius:12px;border:1.5px solid #e8e8e8;touch-action:
 .val{min-width:74px;text-align:center;font-size:13px;font-weight:500;color:#2c2c2a;background:#f5f5f5;border:1.5px solid #d0d0d0;border-radius:20px;padding:6px 12px;}
 </style>
 <style id="sfa-kit">
-/* Kit SFA (clair) — plan blanc sur fond gris-bleu froid, encre bleu nuit, or en accent unique, réglages en règle graduée. */
-:root{--bg:#f3f5f8;--paper:#ffffff;--ink:#0c1f2e;--muted:#5b6b7b;--faint:#8a98a6;--rule:#dfe4ea;--rule2:#c9d1da;
-  --gold:#d9973f;--gold-ink:#9a6420;--press:#e9edf2;
+/* Kit SFA v2 — calqué sur la maquette des capsules gratuites : fond blanc, cartes à bord fin, encre bleu nuit,
+   bouton d'action vert, jaune réservé à « gratuit » et à la prépa. Mise en page : contenu + colonne latérale. */
+:root{--bg:#f6f7f9;--paper:#ffffff;--ink:#0f1b2d;--ink2:#2c3a4e;--muted:#5f6b7a;--faint:#8a95a3;--line:#e3e7ed;--line2:#d3d9e2;
+  --navy:#13233a;--navy2:#1d3354;--chip:#e9effb;--chip-ink:#24428a;--yellow:#f4c542;--yellow-ink:#5a4300;--green:#2e6b55;--green-h:#255a47;
+  --blue:#1e3f8f;--sel:#eef3fd;--rule:var(--line);--rule2:var(--line2);--press:#eef1f5;--gold:#f4c542;--gold-ink:#7a5b00;
   --f-ui:"Mulish",system-ui,-apple-system,"Segoe UI",sans-serif;--f-math:"STIX Two Text","Cambria Math",serif;
   --f-num:"JetBrains Mono",ui-monospace,monospace;color-scheme:light}
 html{background:var(--bg)}
-body{background:var(--bg)!important;color:var(--ink);font-family:var(--f-ui)!important;font-size:15px;line-height:1.5;
-  max-width:1180px;margin:0 auto!important;padding:20px 16px 32px!important}
-.sfa-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 24px;
-  border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:16px}
-.sfa-head h1{font:700 1.5rem/1.2 var(--f-ui);margin:0;letter-spacing:-.005em;text-wrap:balance}
-.sfa-head h1 small{display:block;font:400 .88rem var(--f-ui);color:var(--muted);margin-top:3px}
-.sfa-head .sfa-tag{font:600 .8rem var(--f-ui);color:var(--muted)}
-.sfa-head .sfa-tag b{color:var(--gold-ink);font-weight:700}
-select{font:500 .86rem var(--f-ui)!important;border:1px solid var(--rule2)!important;border-radius:3px!important;background:var(--paper)!important;color:var(--ink)!important;padding:5px 8px!important}
-.sfa-stage{border:1px solid var(--rule)!important;border-radius:4px!important;box-shadow:0 1px 2px rgba(12,31,46,.05),0 8px 24px -16px rgba(12,31,46,.18)}
-.sfa-stage canvas{border:0!important;box-shadow:none!important}
-canvas{background:var(--paper);border:1px solid var(--rule)!important;border-radius:4px!important;box-shadow:0 1px 2px rgba(12,31,46,.05),0 8px 24px -16px rgba(12,31,46,.18)}
+body{background:var(--bg)!important;color:var(--ink);font-family:var(--f-ui)!important;font-size:15px;line-height:1.5;margin:0!important;padding:0!important;max-width:none!important}
+a{color:inherit}
+/* barre du haut */
+.sfa-top{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.sfa-top .in{max-width:1240px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:22px}
+.sfa-logo{display:flex;align-items:center;gap:9px;font:800 15px var(--f-ui);color:var(--ink);text-decoration:none;white-space:nowrap}
+.sfa-logo i{width:28px;height:28px;border-radius:6px;background:var(--navy);color:#fff;display:grid;place-items:center;font:800 10px var(--f-ui);font-style:normal;letter-spacing:.02em}
+.sfa-nav{display:flex;gap:18px;font:600 13px var(--f-ui);color:var(--muted)}
+.sfa-nav a{text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+.sfa-nav a.on{color:var(--ink);border-bottom-color:var(--ink)}
+.sfa-cta{margin-left:auto;background:var(--green);color:#fff;font:700 13px var(--f-ui);padding:9px 14px;border-radius:7px;text-decoration:none;white-space:nowrap}
+.sfa-cta:hover{background:var(--green-h)}
+@media (max-width:720px){.sfa-nav{display:none}.sfa-cta{padding:8px 11px;font-size:12px}}
+/* page */
+.sfa-page{max-width:1240px;margin:0 auto;padding:14px 16px 36px}
+.sfa-crumbs{font:500 12px var(--f-ui);color:var(--muted);margin:2px 0 14px;display:flex;flex-wrap:wrap;gap:6px}
+.sfa-crumbs a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--line2)}
+.sfa-crumbs b{color:var(--ink);font-weight:700}
+.sfa-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:980px){.sfa-grid{grid-template-columns:minmax(0,1fr)}}
+.sfa-titlecard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:14px}
+.sfa-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.sfa-chip{font:700 11px var(--f-ui);padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--chip-ink)}
+.sfa-chip.free{background:var(--yellow);color:var(--yellow-ink)}
+.sfa-chip.hp{background:#f1eef9;color:#5a3fa0}
+.sfa-titlecard h1{font:800 clamp(1.5rem,2.6vw,2rem)/1.15 var(--f-ui);letter-spacing:-.015em;margin:0;text-wrap:balance}
+.sfa-titlecard p{margin:6px 0 0;color:var(--muted);max-width:70ch}
+.sfa-sim{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+/* zone de simulation : le canevas et les scènes 3D prennent le style « lecteur » de la maquette */
+.sfa-sim canvas{background:#fff;border:1px solid var(--line)!important;border-radius:10px!important;box-shadow:none}
+.sfa-stage,.door-stage,.t-stage{border:1px solid var(--line)!important;border-radius:10px!important;box-shadow:none!important}
+.sfa-stage canvas,.door-stage canvas,.t-stage canvas{border:0!important;border-radius:0!important}
+/* contrôles */
 .row{gap:12px!important;margin:10px 0!important}
-.pill,.lbl,.tag{background:none!important;border:0!important;border-radius:0!important;padding:0!important;
-  font:600 .86rem var(--f-ui)!important;color:var(--muted);min-width:0}
-.val{background:none!important;border:0!important;border-radius:0!important;padding:0!important;
-  font:500 .9rem var(--f-num)!important;font-variant-numeric:tabular-nums;text-align:right}
-.btn{background:transparent!important;border:1px solid var(--rule2)!important;border-radius:3px!important;color:var(--muted)!important;
-  font:600 .82rem var(--f-ui)!important;padding:6px 12px!important;transition:color .15s,background .15s}
-.btn:hover{color:var(--ink)!important;background:var(--press)!important}
-.btn.on{background:var(--ink)!important;border-color:var(--ink)!important;color:#fff!important;box-shadow:inset 0 -2px 0 var(--gold)}
-.fml{background:transparent!important;border:0!important;border-left:2px solid var(--gold)!important;border-radius:0!important;
-  font:400 1.08rem/1.7 var(--f-math)!important;color:var(--ink);padding:4px 0 4px 14px!important;margin:14px 0!important}
-.info{background:var(--paper)!important;border:1px solid var(--rule)!important;border-radius:3px!important;
-  font:500 .84rem/1.8 var(--f-num)!important;color:var(--muted)!important;padding:8px 14px!important}
-input[type=range]{-webkit-appearance:none;appearance:none;height:24px;background:linear-gradient(var(--rule2),var(--rule2)) center/100% 2px no-repeat;cursor:pointer;--pc:var(--gold)}
-input[type=range]::-webkit-slider-runnable-track{height:2px;background:transparent}
-input[type=range]::-moz-range-track{height:2px;background:transparent}
-input[type=range]::-moz-range-progress{height:2px;background:var(--pc)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:6px;height:20px;border-radius:1px;background:var(--pc);margin-top:-9px;border:0}
-input[type=range]::-moz-range-thumb{width:6px;height:20px;border-radius:1px;background:var(--pc);border:0}
-button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-.sfa-foot{margin-top:22px;padding-top:10px;border-top:1px solid var(--rule);font-size:.78rem;color:var(--faint)}
+.pill,.lbl,.tag{background:none!important;border:0!important;border-radius:0!important;padding:0!important;font:700 .86rem var(--f-ui)!important;color:var(--ink2)}
+.pill{white-space:normal!important}
+.row input[type=range]{flex:1;min-width:110px}
+@media (max-width:520px){.row,div:has(>input[type=range]){flex-wrap:wrap!important}
+  .row>.pill:first-child,div:has(>input[type=range])>.pill:first-child{min-width:0!important;flex:1 1 100%}
+  input[type=range]{min-width:0!important}.val{min-width:0!important}}
+.val{background:none!important;border:0!important;border-radius:0!important;padding:0!important;font:600 .9rem var(--f-num)!important;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.btn{background:var(--paper)!important;border:1px solid var(--line2)!important;border-radius:7px!important;color:var(--ink2)!important;
+  font:700 .82rem var(--f-ui)!important;padding:7px 13px!important;transition:background .15s,border-color .15s;cursor:pointer}
+.btn:hover{background:var(--press)!important;border-color:var(--faint)!important}
+.btn.on{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important;box-shadow:none}
+.fml{background:var(--sel)!important;border:0!important;border-radius:10px!important;font:400 1.06rem/1.7 var(--f-math)!important;color:var(--ink);padding:10px 14px!important;margin:12px 0!important}
+.info{background:var(--bg)!important;border:1px solid var(--line)!important;border-radius:10px!important;font:500 .84rem/1.8 var(--f-num)!important;color:var(--muted)!important;padding:9px 14px!important}
+select{font:600 .86rem var(--f-ui)!important;border:1px solid var(--line2)!important;border-radius:7px!important;background:var(--paper)!important;color:var(--ink)!important;padding:6px 8px!important}
+input[type=range]{-webkit-appearance:none;appearance:none;height:24px;background:linear-gradient(var(--line),var(--line)) center/100% 4px no-repeat;cursor:pointer;--pc:var(--blue)}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:transparent;border-radius:2px}
+input[type=range]::-moz-range-track{height:4px;background:transparent}
+input[type=range]::-moz-range-progress{height:4px;background:var(--pc);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--pc);margin-top:-6px;box-shadow:0 1px 3px rgba(15,27,45,.25)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--pc);box-shadow:0 1px 3px rgba(15,27,45,.25)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+/* colonne latérale */
+.sfa-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sfa-list{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+.sfa-list h2{font:800 13px var(--f-ui);margin:2px 4px 8px;display:flex;justify-content:space-between;gap:8px}
+.sfa-list h2 span{font-weight:600;color:var(--muted)}
+.sfa-list ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.sfa-list a{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:baseline;padding:7px 8px;border-radius:8px;text-decoration:none;font:600 13px/1.35 var(--f-ui);color:var(--ink2)}
+.sfa-list a:hover{background:var(--press)}
+.sfa-list a.on{background:var(--sel);color:var(--chip-ink)}
+.sfa-list a i{font:600 11px var(--f-num);font-style:normal;color:var(--faint)}
+.sfa-promo{background:var(--navy);color:#fff;border-radius:12px;padding:16px}
+.sfa-promo small{display:block;font:800 10px var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
+.sfa-promo b{display:block;font:800 16px/1.3 var(--f-ui);margin-bottom:12px}
+.sfa-promo a{display:inline-block;background:var(--yellow);color:var(--yellow-ink);font:800 12px var(--f-ui);padding:8px 12px;border-radius:7px;text-decoration:none}
+.sfa-foot{max-width:1240px;margin:0 auto;padding:16px;border-top:1px solid var(--line);font-size:.78rem;color:var(--faint)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <script>
@@ -88,7 +127,15 @@ new MutationObserver(ms=>ms.forEach(m=>{if(m.target.classList&&m.target.classLis
   .observe(document.body,{subtree:true,attributes:true,attributeFilter:['style']});
 });
 </script>
-<header class="sfa-head"><h1>Fentes de Young<small>Interférences : écartement des fentes, longueur d'onde et interfrange</small></h1><span class="sfa-tag"><b>SFA</b> · Physique · Ondes</span></header>
+<header class="sfa-top"><div class="in">
+  <a class="sfa-logo" href="https://sfascienceforall-cell.github.io/simulations/"><i>SFA</i>Science For All</a>
+  <nav class="sfa-nav"><a class="on" href="https://sfascienceforall-cell.github.io/simulations/">Simulations</a><a href="#">Prépa médecine</a></nav>
+  <a class="sfa-cta" href="#">Découvrir la prépa</a></div></header>
+<div class="sfa-page">
+<nav class="sfa-crumbs" aria-label="Fil d'Ariane"><a href="https://sfascienceforall-cell.github.io/simulations/">Simulations</a>›<a href="https://sfascienceforall-cell.github.io/simulations/#PH5">PH5 · Ondes</a>›<b>Fentes de Young</b></nav>
+<div class="sfa-grid"><main style="min-width:0">
+<div class="sfa-titlecard"><div class="sfa-chips"><span class="sfa-chip">Physique · PH5 · Ondes</span><span class="sfa-chip free">Gratuit</span></div><h1>Fentes de Young</h1><p>Interférences : écartement des fentes, longueur d&#x27;onde et interfrange</p></div>
+<section class="sfa-sim">
 
 
 
@@ -190,6 +237,11 @@ function frame(){
 }
 frame();
 </script>
-<footer class="sfa-foot">Science For All · simulations interactives</footer>
+</section></main>
+<aside class="sfa-side">
+  <div class="sfa-list"><h2>PH5 · Ondes, interférences, diffraction<span>7 simulations</span></h2><ol><li><a href="https://sfascienceforall-cell.github.io/Onde-progressive/"><i>01</i>Onde progressive</a></li><li><a href="https://sfascienceforall-cell.github.io/Fonction-d-onde-f-x-vt-/"><i>02</i>Fonction d&#x27;onde f(x − vt)</a></li><li><a href="https://sfascienceforall-cell.github.io/Relation-v-f/"><i>03</i>Relation v = λf</a></li><li><a href="https://sfascienceforall-cell.github.io/Onde-progressive-et-Onde-stationnaire/"><i>04</i>Onde progressive et stationnaire</a></li><li><a href="https://sfascienceforall-cell.github.io/diffraction/"><i>05</i>Diffraction</a></li><li><a class="on" aria-current="page" href="https://sfascienceforall-cell.github.io/yung/"><i>06</i>Fentes de Young</a></li><li><a href="https://sfascienceforall-cell.github.io/effet-de-battement/"><i>07</i>Battements</a></li></ol></div>
+  <div class="sfa-promo"><small>Envie d'aller plus loin ?</small><b>La prépa SFA : le cours complet, les exercices type examen corrigés et le suivi.</b><a href="#">Voir la prépa</a></div>
+</aside></div></div>
+<footer class="sfa-foot">Science For All · simulations interactives de physique</footer>
 </body>
 </html>
